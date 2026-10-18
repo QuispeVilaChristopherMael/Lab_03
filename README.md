@@ -1,7 +1,7 @@
 # Laboratorio N° 03: Creación de Modelos en Django
 
 **Institución:** Tecsup  
-**Curso:** Desarrollo de Aplicaciones Web  
+**Curso:** Desarrollo de Aplicaciones Empresariales
 **Tema:** Creación de Modelos, ORM y Migraciones en Django  
 
 ---
