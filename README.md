@@ -196,8 +196,19 @@ El repositorio implementa buenas prácticas de seguridad para proteger informaci
 
 ---
 
-## 📌 Conclusiones
+## 📌 Conclusiones del Laboratorio
 
-1. **Eficiencia del ORM de Django:** El ORM facilita la definición de esquemas de datos complejos en clases limpias de Python, gestionando automáticamente la integridad referencial, restricciones de unicidad y llaves foráneas (`CASCADE`, `SET_NULL`).
-2. **Control de Versiones del Esquema:** Las herramientas `makemigrations` y `migrate` permiten una evolución ordenada del modelo de datos sin necesidad de scripts SQL manuales propensos a errores humanos, asegurando reproducibilidad en cualquier entorno.
-3. **Modularidad y Separación de Responsabilidades:** Separar las funcionalidades en aplicaciones independientes (`encuesta` y `ventas`) promueve la escalabilidad y facilita la colaboración en equipo, manteniendo las vistas, modelos y rutas organizadas de acuerdo al estándar MVT (Modelo-Vista-Template).
+1. **Abstracción y Productividad con el ORM de Django:**  
+   El uso del ORM (*Object-Relational Mapping*) demostró una notable ventaja sobre la manipulación manual de sentencias SQL. Permitió definir esquemas relacionales complejos (como la relación uno a muchos entre `Pregunta` y `Opcion`, o la estructura multidimensional del Sistema de Ventas con `Cliente`, `Proveedor`, `Producto` y `DetalleVenta`) mediante clases y atributos en Python. Esto no solo aceleró los tiempos de desarrollo, sino que redujo a cero los errores sintácticos de SQL y garantizó la protección nativa contra inyecciones SQL.
+
+2. **Trazabilidad y Control de Versiones con el Sistema de Migraciones:**  
+   La separación entre `makemigrations` (generación declarativa de operaciones en archivos de migración) y `migrate` (ejecución real en la base de datos) constituye un mecanismo de versionado de esquemas altamente confiable. Comandos como `sqlmigrate` permitieron inspeccionar el SQL subyacente que Django ejecutaría en el motor relacional (SQLite), brindando visibilidad total sobre la creación de tablas, índices y restricciones de clave foránea (`REFERENCES`, `DEFERRABLE INITIALLY DEFERRED`) antes de aplicarlas.
+
+3. **Garantía de Integridad Referencial en Modelos Complejos:**  
+   En el caso práctico del Sistema de Ventas, la correcta configuración de reglas de eliminación como `models.CASCADE` (para la eliminación en cascada de opciones, teléfonos o detalles de venta dependientes) y `models.SET_NULL` (para campos opcionales como `direccion` en clientes o proveedores) demostró ser fundamental para mantener la consistencia de la base de datos y evitar registros huérfanos o pérdidas de datos no deseadas.
+
+4. **Automatización de Población de Datos y Verificación Mediante Pruebas Unitarias:**  
+   La creación de scripts desacoplados como `poblar_datos.py` facilitó la carga reproducible de datos iniciales y ficticios sin depender de herramientas visuales externas (como SQLite Administrator). A su vez, la implementación de pruebas automatizadas con `django.test.TestCase` permitió certificar el correcto flujo de las vistas `index`, `detalle` y `votar`, garantizando que el incremento de votos y las respuestas HTTP funcionen de manera predecible y sin regresiones.
+
+5. **Cultura de Seguridad y Despliegue en Control de Versiones:**  
+   Publicar un proyecto de software en un repositorio público exige aplicar principios rigurosos de seguridad desde el primer commit. La implementación de un `.gitignore` estricto —excluyendo bases de datos locales (`db.sqlite3`), archivos de entorno (`.env`), tokens de API y cachés de Python—, junto con la parametrización de la `SECRET_KEY` en `settings.py`, asegura que el código sea colaborativo y auditable sin comprometer información sensible, credenciales ni la privacidad de los desarrolladores.
